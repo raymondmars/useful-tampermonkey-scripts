@@ -11,10 +11,30 @@
 
 (function() {
   'use strict';
+
+  let hasProcessedTransItems = false; 
+
+  const processTransItems = () => {
+    if(hasProcessedTransItems) {
+      return;
+    }
+    hasProcessedTransItems = true;
+
+    const items = document.querySelectorAll('ytd-transcript-segment-renderer');
+    for(let i=0; i<items.length; i++) {
+      const item = items[i];
+      item.addEventListener('yt-transcript-segment-selected', (event) => {
+        event.preventDefault();
+        // event.stopPropagation();
+        console.log('event',event.target && event.target.innerText);
+      });
+    }
+  }
   const observer = new MutationObserver((mutations, obs) => {      
     const scriptButton = document.getElementById('button-container');
     if (scriptButton) {
       if(document.querySelector('ytd-transcript-renderer')) {
+        processTransItems();
         return;
       }
       scriptButton.querySelector('button').click();
